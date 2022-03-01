@@ -1,0 +1,14 @@
+{
+    "name": "JamCity.SF.FileBrowser",
+    "rootNamespace": "JamCity.SF.FileBrowser",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
