@@ -1,0 +1,21 @@
+{
+  "name": "com.jamcity.sf.unity.filebrowser",
+  "version": "1.0.0",
+  "displayName": "SF File Browser",
+  "description": "A native file browser for Unity standalone platforms.",
+  "unity": "2021.2",
+  "author": {
+    "name": "SF Tools"
+  },
+  "dependencies": {},
+  "keywords": [
+    "file",
+    "browser",
+    "editor"
+  ],
+  "repository": "git://github.com/brooklynpacket/sf-tools-filebrowser",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@brooklynpacket"
+  },
+  "changelogUrl": "CHANGELOG.md"
+}
