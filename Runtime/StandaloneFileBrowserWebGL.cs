@@ -1,27 +1,17 @@
-#if UNITY_EDITOR
+#if UNITY_WEBGL
 
 using System;
 using UnityEditor;
+using UnityEngine;
 
 namespace JamCity.SF.FileBrowser
 {
-    public class StandaloneFileBrowserEditor : IStandaloneFileBrowser
+    public class StandaloneFileBrowserWebGL : IStandaloneFileBrowser
     {
         public string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
         {
-            string path;
-
-            if (extensions == null)
-            {
-                path = EditorUtility.OpenFilePanel(title, directory, string.Empty);
-            }
-            else
-            {
-                path = EditorUtility.OpenFilePanelWithFilters(title, directory,
-                    GetFilterFromFileExtensionList(extensions));
-            }
-
-            return string.IsNullOrEmpty(path) ? Array.Empty<string>() : new[] { path };
+            Debug.LogError("Cannot use synchronous file browser operations in WebGL!");
+            return Array.Empty<string>();
         }
 
         public void OpenFilePanelAsync(string title, string directory, ExtensionFilter[] extensions, bool multiselect,
@@ -32,8 +22,8 @@ namespace JamCity.SF.FileBrowser
 
         public string[] OpenFolderPanel(string title, string directory, bool multiselect)
         {
-            string path = EditorUtility.OpenFolderPanel(title, directory, string.Empty);
-            return string.IsNullOrEmpty(path) ? Array.Empty<string>() : new[] { path };
+            Debug.LogError("Cannot use synchronous file browser operations in WebGL!");
+            return Array.Empty<string>();
         }
 
         public void OpenFolderPanelAsync(string title, string directory, bool multiselect, Action<string[]> cb)
@@ -43,9 +33,10 @@ namespace JamCity.SF.FileBrowser
 
         public string SaveFilePanel(string title, string directory, string defaultName, ExtensionFilter[] extensions)
         {
-            string ext = extensions != null ? extensions[0].Extensions[0] : string.Empty;
-            string name = string.IsNullOrEmpty(ext) ? defaultName : defaultName + "." + ext;
-            return EditorUtility.SaveFilePanel(title, directory, name, ext);
+            // string ext = extensions != null ? extensions[0].Extensions[0] : string.Empty;
+            // string name = string.IsNullOrEmpty(ext) ? defaultName : defaultName + "." + ext;
+            Debug.LogError("Cannot use synchronous file browser operations in WebGL!");
+            return string.Empty;
         }
 
         public void SaveFilePanelAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions,
