@@ -1,13 +1,11 @@
 #if UNITY_STANDALONE_LINUX
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
-using UnityEngine;
 
 namespace JamCity.SF.FileBrowser
 {
-    public class StandaloneFileBrowserLinux : IStandaloneFileBrowser
+    internal class StandaloneFileBrowserLinux : StandaloneFileBrowser
     {
         private static Action<string[]> _openFileCb;
         private static Action<string[]> _openFolderCb;
@@ -47,18 +45,19 @@ namespace JamCity.SF.FileBrowser
             DialogInit();
         }
 
-        public string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
+        public override string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions,
+                                               bool multiselect)
         {
-            var paths = Marshal.PtrToStringAnsi(DialogOpenFilePanel(
+            string paths = Marshal.PtrToStringAnsi(DialogOpenFilePanel(
                 title,
                 directory,
                 GetFilterFromFileExtensionList(extensions),
                 multiselect));
-            return paths.Split((char) 28);
+            return paths?.Split((char) 28);
         }
 
-        public void OpenFilePanelAsync(string title, string directory, ExtensionFilter[] extensions, bool multiselect,
-                                       Action<string[]> cb)
+        public override void OpenFilePanelAsync(string title, string directory, ExtensionFilter[] extensions,
+                                                bool multiselect, Action<string[]> cb)
         {
             _openFileCb = cb;
             DialogOpenFilePanelAsync(
@@ -69,16 +68,16 @@ namespace JamCity.SF.FileBrowser
                 (string result) => { _openFileCb.Invoke(result.Split((char) 28)); });
         }
 
-        public string[] OpenFolderPanel(string title, string directory, bool multiselect)
+        public override string[] OpenFolderPanel(string title, string directory, bool multiselect)
         {
-            var paths = Marshal.PtrToStringAnsi(DialogOpenFolderPanel(
+            string paths = Marshal.PtrToStringAnsi(DialogOpenFolderPanel(
                 title,
                 directory,
                 multiselect));
-            return paths.Split((char) 28);
+            return paths?.Split((char) 28);
         }
 
-        public void OpenFolderPanelAsync(string title, string directory, bool multiselect, Action<string[]> cb)
+        public override void OpenFolderPanelAsync(string title, string directory, bool multiselect, Action<string[]> cb)
         {
             _openFolderCb = cb;
             DialogOpenFolderPanelAsync(
@@ -88,7 +87,8 @@ namespace JamCity.SF.FileBrowser
                 (string result) => { _openFolderCb.Invoke(result.Split((char) 28)); });
         }
 
-        public string SaveFilePanel(string title, string directory, string defaultName, ExtensionFilter[] extensions)
+        public override string SaveFilePanel(string title, string directory, string defaultName,
+                                             ExtensionFilter[] extensions)
         {
             return Marshal.PtrToStringAnsi(DialogSaveFilePanel(
                 title,
@@ -97,8 +97,8 @@ namespace JamCity.SF.FileBrowser
                 GetFilterFromFileExtensionList(extensions)));
         }
 
-        public void SaveFilePanelAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions,
-                                       Action<string> cb)
+        public override void SaveFilePanelAsync(string title, string directory, string defaultName,
+                                                ExtensionFilter[] extensions, Action<string> cb)
         {
             _saveFileCb = cb;
             DialogSaveFilePanelAsync(
@@ -116,12 +116,12 @@ namespace JamCity.SF.FileBrowser
                 return string.Empty;
             }
 
-            var filterString = string.Empty;
-            foreach (var filter in extensions)
+            string filterString = string.Empty;
+            foreach (ExtensionFilter filter in extensions)
             {
                 filterString += filter.Name + ";";
 
-                foreach (var ext in filter.Extensions)
+                foreach (string ext in filter.Extensions)
                 {
                     filterString += ext + ",";
                 }

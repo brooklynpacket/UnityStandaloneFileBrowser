@@ -1,13 +1,15 @@
 #if UNITY_EDITOR
 
 using System;
+using System.IO;
 using UnityEditor;
 
 namespace JamCity.SF.FileBrowser
 {
-    public class StandaloneFileBrowserEditor : IStandaloneFileBrowser
+    internal class StandaloneFileBrowserEditor : StandaloneFileBrowser
     {
-        public string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
+        public override string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions,
+                                               bool multiselect)
         {
             string path;
 
@@ -24,32 +26,33 @@ namespace JamCity.SF.FileBrowser
             return string.IsNullOrEmpty(path) ? Array.Empty<string>() : new[] { path };
         }
 
-        public void OpenFilePanelAsync(string title, string directory, ExtensionFilter[] extensions, bool multiselect,
-                                       Action<string[]> cb)
+        public override void OpenFilePanelAsync(string title, string directory, ExtensionFilter[] extensions,
+                                                bool multiselect, Action<string[]> cb)
         {
             cb.Invoke(OpenFilePanel(title, directory, extensions, multiselect));
         }
 
-        public string[] OpenFolderPanel(string title, string directory, bool multiselect)
+        public override string[] OpenFolderPanel(string title, string directory, bool multiselect)
         {
             string path = EditorUtility.OpenFolderPanel(title, directory, string.Empty);
             return string.IsNullOrEmpty(path) ? Array.Empty<string>() : new[] { path };
         }
 
-        public void OpenFolderPanelAsync(string title, string directory, bool multiselect, Action<string[]> cb)
+        public override void OpenFolderPanelAsync(string title, string directory, bool multiselect, Action<string[]> cb)
         {
             cb.Invoke(OpenFolderPanel(title, directory, multiselect));
         }
 
-        public string SaveFilePanel(string title, string directory, string defaultName, ExtensionFilter[] extensions)
+        public override string SaveFilePanel(string title, string directory, string defaultName,
+                                             ExtensionFilter[] extensions)
         {
             string ext = extensions != null ? extensions[0].Extensions[0] : string.Empty;
             string name = string.IsNullOrEmpty(ext) ? defaultName : defaultName + "." + ext;
             return EditorUtility.SaveFilePanel(title, directory, name, ext);
         }
 
-        public void SaveFilePanelAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions,
-                                       Action<string> cb)
+        public override void SaveFilePanelAsync(string title, string directory, string defaultName,
+                                                ExtensionFilter[] extensions, Action<string> cb)
         {
             cb.Invoke(SaveFilePanel(title, directory, defaultName, extensions));
         }

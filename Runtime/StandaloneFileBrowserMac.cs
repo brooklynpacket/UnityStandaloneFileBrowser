@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace JamCity.SF.FileBrowser
 {
-    public class StandaloneFileBrowserMac : IStandaloneFileBrowser
+    internal class StandaloneFileBrowserMac : StandaloneFileBrowser
     {
         private static Action<string[]> _openFileCb;
         private static Action<string[]> _openFolderCb;
@@ -55,7 +55,8 @@ namespace JamCity.SF.FileBrowser
         private static extern void DialogSaveFilePanelAsync(string title, string directory, string defaultName,
                                                             string extension, AsyncCallback callback);
 
-        public string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
+        public override string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions,
+                                               bool multiselect)
         {
             string paths = Marshal.PtrToStringAnsi(DialogOpenFilePanel(
                 title,
@@ -65,8 +66,8 @@ namespace JamCity.SF.FileBrowser
             return paths?.Split((char) 28);
         }
 
-        public void OpenFilePanelAsync(string title, string directory, ExtensionFilter[] extensions, bool multiselect,
-                                       Action<string[]> cb)
+        public override void OpenFilePanelAsync(string title, string directory, ExtensionFilter[] extensions,
+                                                bool multiselect, Action<string[]> cb)
         {
             _openFileCb = cb;
             DialogOpenFilePanelAsync(
@@ -77,7 +78,7 @@ namespace JamCity.SF.FileBrowser
                 openFileCb);
         }
 
-        public string[] OpenFolderPanel(string title, string directory, bool multiselect)
+        public override string[] OpenFolderPanel(string title, string directory, bool multiselect)
         {
             string paths = Marshal.PtrToStringAnsi(DialogOpenFolderPanel(
                 title,
@@ -86,7 +87,7 @@ namespace JamCity.SF.FileBrowser
             return paths?.Split((char) 28);
         }
 
-        public void OpenFolderPanelAsync(string title, string directory, bool multiselect, Action<string[]> cb)
+        public override void OpenFolderPanelAsync(string title, string directory, bool multiselect, Action<string[]> cb)
         {
             _openFolderCb = cb;
             DialogOpenFolderPanelAsync(
@@ -96,7 +97,8 @@ namespace JamCity.SF.FileBrowser
                 openFolderCb);
         }
 
-        public string SaveFilePanel(string title, string directory, string defaultName, ExtensionFilter[] extensions)
+        public override string SaveFilePanel(string title, string directory, string defaultName,
+                                             ExtensionFilter[] extensions)
         {
             return Marshal.PtrToStringAnsi(DialogSaveFilePanel(
                 title,
@@ -105,8 +107,8 @@ namespace JamCity.SF.FileBrowser
                 GetFilterFromFileExtensionList(extensions)));
         }
 
-        public void SaveFilePanelAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions,
-                                       Action<string> cb)
+        public override void SaveFilePanelAsync(string title, string directory, string defaultName,
+                                                ExtensionFilter[] extensions, Action<string> cb)
         {
             _saveFileCb = cb;
             DialogSaveFilePanelAsync(

@@ -1,6 +1,7 @@
 #if UNITY_STANDALONE_WIN
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
@@ -12,7 +13,7 @@ namespace JamCity.SF.FileBrowser
     // - WindowWrapper class and GetActiveWindow() are required for modal file dialog.
     // - "PlayerSettings/Visible In Background" should be enabled, otherwise when file dialog opened app window minimizes automatically.
 
-    public class WindowWrapper : IWin32Window
+    internal class WindowWrapper : IWin32Window
     {
         public WindowWrapper(IntPtr handle)
         {
@@ -22,12 +23,13 @@ namespace JamCity.SF.FileBrowser
         public IntPtr Handle { get; }
     }
 
-    public class StandaloneFileBrowserWindows : IStandaloneFileBrowser
+    internal class StandaloneFileBrowserWindows : StandaloneFileBrowser
     {
         [DllImport("user32.dll")]
         private static extern IntPtr GetActiveWindow();
 
-        public string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
+        public override string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions,
+                                               bool multiselect)
         {
             VistaOpenFileDialog fd = new();
             fd.Title = title;
@@ -53,13 +55,13 @@ namespace JamCity.SF.FileBrowser
             return filenames;
         }
 
-        public void OpenFilePanelAsync(string title, string directory, ExtensionFilter[] extensions, bool multiselect,
-                                       Action<string[]> cb)
+        public override void OpenFilePanelAsync(string title, string directory, ExtensionFilter[] extensions,
+                                                bool multiselect, Action<string[]> cb)
         {
             cb.Invoke(OpenFilePanel(title, directory, extensions, multiselect));
         }
 
-        public string[] OpenFolderPanel(string title, string directory, bool multiselect)
+        public override string[] OpenFolderPanel(string title, string directory, bool multiselect)
         {
             VistaFolderBrowserDialog fd = new();
             fd.Description = title;
@@ -74,12 +76,13 @@ namespace JamCity.SF.FileBrowser
             return filenames;
         }
 
-        public void OpenFolderPanelAsync(string title, string directory, bool multiselect, Action<string[]> cb)
+        public override void OpenFolderPanelAsync(string title, string directory, bool multiselect, Action<string[]> cb)
         {
             cb.Invoke(OpenFolderPanel(title, directory, multiselect));
         }
 
-        public string SaveFilePanel(string title, string directory, string defaultName, ExtensionFilter[] extensions)
+        public override string SaveFilePanel(string title, string directory, string defaultName,
+                                             ExtensionFilter[] extensions)
         {
             VistaSaveFileDialog fd = new();
             fd.Title = title;
@@ -117,15 +120,15 @@ namespace JamCity.SF.FileBrowser
             return filename;
         }
 
-        public void SaveFilePanelAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions,
-                                       Action<string> cb)
+        public override void SaveFilePanelAsync(string title, string directory, string defaultName,
+                                                ExtensionFilter[] extensions, Action<string> cb)
         {
             cb.Invoke(SaveFilePanel(title, directory, defaultName, extensions));
         }
 
         // .NET Framework FileDialog Filter format
         // https://msdn.microsoft.com/en-us/library/microsoft.win32.filedialog.filter
-        private static string GetFilterFromFileExtensionList(ExtensionFilter[] extensions)
+        private static string GetFilterFromFileExtensionList(IEnumerable<ExtensionFilter> extensions)
         {
             string filterString = string.Empty;
             foreach (ExtensionFilter filter in extensions)

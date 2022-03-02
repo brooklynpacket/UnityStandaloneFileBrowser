@@ -2,7 +2,7 @@ using System;
 
 namespace JamCity.SF.FileBrowser
 {
-    public interface IStandaloneFileBrowser
+    public interface IStandaloneFileBrowser : IStandaloneFileIO
     {
         string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions, bool multiselect);
         string[] OpenFolderPanel(string title, string directory, bool multiselect);

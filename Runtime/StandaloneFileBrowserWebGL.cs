@@ -1,62 +1,53 @@
 #if UNITY_WEBGL
 
 using System;
-using UnityEditor;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace JamCity.SF.FileBrowser
 {
-    public class StandaloneFileBrowserWebGL : IStandaloneFileBrowser
+    internal class StandaloneFileBrowserWebGL : IStandaloneFileIO
     {
-        public string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
+        private StandaloneFileBrowserWebGLHandler handler;
+        public StandaloneFileBrowserWebGL()
         {
-            Debug.LogError("Cannot use synchronous file browser operations in WebGL!");
-            return Array.Empty<string>();
-        }
-
-        public void OpenFilePanelAsync(string title, string directory, ExtensionFilter[] extensions, bool multiselect,
-                                       Action<string[]> cb)
-        {
-            cb.Invoke(OpenFilePanel(title, directory, extensions, multiselect));
-        }
-
-        public string[] OpenFolderPanel(string title, string directory, bool multiselect)
-        {
-            Debug.LogError("Cannot use synchronous file browser operations in WebGL!");
-            return Array.Empty<string>();
-        }
-
-        public void OpenFolderPanelAsync(string title, string directory, bool multiselect, Action<string[]> cb)
-        {
-            cb.Invoke(OpenFolderPanel(title, directory, multiselect));
-        }
-
-        public string SaveFilePanel(string title, string directory, string defaultName, ExtensionFilter[] extensions)
-        {
-            // string ext = extensions != null ? extensions[0].Extensions[0] : string.Empty;
-            // string name = string.IsNullOrEmpty(ext) ? defaultName : defaultName + "." + ext;
-            Debug.LogError("Cannot use synchronous file browser operations in WebGL!");
-            return string.Empty;
-        }
-
-        public void SaveFilePanelAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions,
-                                       Action<string> cb)
-        {
-            cb.Invoke(SaveFilePanel(title, directory, defaultName, extensions));
-        }
-
-        // EditorUtility.OpenFilePanelWithFilters extension filter format
-        private static string[] GetFilterFromFileExtensionList(ExtensionFilter[] extensions)
-        {
-            string[] filters = new string[extensions.Length * 2];
-            for (int i = 0 ; i < extensions.Length ; i++)
+            GameObject handlerGameObject = new(nameof(StandaloneFileBrowserWebGLHandler))
             {
-                int at = i * 2;
-                filters[at] = extensions[i].Name;
-                filters[at + 1] = string.Join(",", extensions[i].Extensions);
+                hideFlags = HideFlags.HideAndDontSave
+            };
+
+            Object.DontDestroyOnLoad(handlerGameObject);
+            handler = handlerGameObject.AddComponent<StandaloneFileBrowserWebGLHandler>();
+        }
+
+        public void OpenFileAsync(Action<string> contentsCallback, params ExtensionFilter[] extensions)
+        {
+            handler.OpenFileBrowser(GetExtensions(extensions), contentsCallback);
+        }
+
+        public void OpenFilesAsync(Action<IEnumerable<string>> contentsCallback, params ExtensionFilter[] extensions)
+        {
+            handler.OpenMultiFileBrowser(GetExtensions(extensions), contentsCallback);
+        }
+
+        public void SaveFileAsync(string defaultPath, string contents)
+        {
+            handler.SaveFileBrowser(Encoding.UTF8.GetBytes(contents), defaultPath);
+        }
+
+        private static string GetExtensions(IEnumerable<ExtensionFilter> extensionFilters)
+        {
+            List<string> extensions = new();
+
+            foreach (ExtensionFilter extensionFilter in extensionFilters)
+            {
+                extensions.AddRange(extensionFilter.Extensions);
             }
 
-            return filters;
+            return string.Join(",", extensions);
         }
     }
 }
