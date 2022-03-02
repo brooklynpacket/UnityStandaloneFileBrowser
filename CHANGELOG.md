@@ -6,10 +6,28 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). ​ ​
 
 ## [Unreleased]
 
+- Initial import from base repository
+
 ### Added
+
+- WebGL support
+  - New MonoBehaviour to receive file browser messages
+  - Automatically create and maintain the flow of file io operations
+- New interface for doing pure file IO
+  - Specific platform file browser implementations wrap this when possible to simplify the functionality
+- Wrap all code files in an assembly definition
 
 ### Changed
 
+- Now use a helper class to retrieve the per-platform implementation rather than having the helper class do the implementation itself
+- Moved around code to reduce multiple type declarations in one file
+- Made all implementation classes internal
+  - Interfaces are still public
+
 ### Fixed
 
+- Add platform limitations for plugin source DLLs (i.e. only load linux plugin generator when building linux platform)
+
 ### Removed
+
+- Sample code
