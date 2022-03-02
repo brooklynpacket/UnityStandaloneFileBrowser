@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -11,9 +10,11 @@ namespace JamCity.SF.FileBrowser
 {
     internal class StandaloneFileBrowserWebGL : IStandaloneFileIO
     {
-        private StandaloneFileBrowserWebGLHandler handler;
+        private static StandaloneFileBrowserWebGLHandler handler;
         public StandaloneFileBrowserWebGL()
         {
+            if (handler != null) return;
+
             GameObject handlerGameObject = new(nameof(StandaloneFileBrowserWebGLHandler))
             {
                 hideFlags = HideFlags.HideAndDontSave
