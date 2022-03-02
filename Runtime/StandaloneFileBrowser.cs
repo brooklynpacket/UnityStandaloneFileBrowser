@@ -4,24 +4,6 @@ using System.IO;
 
 namespace JamCity.SF.FileBrowser
 {
-    public struct ExtensionFilter
-    {
-        public readonly string Name;
-        public readonly string[] Extensions;
-
-        public ExtensionFilter(string filterName, params string[] filterExtensions)
-        {
-            Name = filterName;
-            Extensions = filterExtensions;
-        }
-
-        public static implicit operator ExtensionFilter(string extension)
-        {
-            string withDot = extension.StartsWith(".") ? extension : $".{extension}";
-            return new ExtensionFilter(string.Empty, withDot);
-        }
-    }
-
     internal abstract class StandaloneFileBrowser : IStandaloneFileBrowser
     {
         public void OpenFileAsync(Action<string> contentsCallback, params ExtensionFilter[] extensions)
@@ -54,7 +36,7 @@ namespace JamCity.SF.FileBrowser
             string directory = Path.GetDirectoryName(defaultPath);
             string name = Path.GetFileNameWithoutExtension(defaultPath);
             string ext = Path.GetExtension(defaultPath);
-            SaveFilePanelAsync("Save File", directory, name, new[] { new ExtensionFilter(string.Empty, ext) },
+            SaveFilePanelAsync("Save File", directory, name, new ExtensionFilter[] { ext },
                 saveFilePath => File.WriteAllText(saveFilePath, contents));
         }
 

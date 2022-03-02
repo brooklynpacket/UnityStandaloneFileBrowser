@@ -26,7 +26,7 @@ namespace JamCity.SF.FileBrowser
         public void OpenFileBrowser(string extensions, Action<string> onFileLoaded)
         {
             fileLoadedCallback = onFileLoaded;
-            UploadFile(name, nameof(SaveDialogResult), extensions, false);
+            UploadFile(name, nameof(FileDialogResult), extensions, false);
         }
 
         public void OpenMultiFileBrowser(string extensions, Action<IEnumerable<string>> onFilesLoaded)

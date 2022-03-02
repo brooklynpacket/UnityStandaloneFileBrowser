@@ -47,7 +47,7 @@ namespace JamCity.SF.FileBrowser
                                              ExtensionFilter[] extensions)
         {
             string ext = extensions != null ? extensions[0].Extensions[0] : string.Empty;
-            string name = string.IsNullOrEmpty(ext) ? defaultName : defaultName + "." + ext;
+            string name = string.IsNullOrEmpty(ext) ? defaultName : $"{defaultName}{ext}";
             return EditorUtility.SaveFilePanel(title, directory, name, ext);
         }
 
