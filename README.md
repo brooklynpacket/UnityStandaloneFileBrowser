@@ -1,6 +1,6 @@
-# Unity Standalone File Browser
+# SF Tools | Unity File Browser
 
-A simple wrapper for native file dialogs on Windows/Mac/Linux.
+A simple wrapper for native file dialogs on Windows/Mac/Linux/Web.
 
 - Works in editor and runtime.
 - Open file/folder, save file dialogs supported.
@@ -10,16 +10,14 @@ A simple wrapper for native file dialogs on Windows/Mac/Linux.
 - Linux support by [Ricardo Rodrigues](https://github.com/RicardoEPRodrigues).
 - Basic WebGL support.
 
-[Download Package](https://github.com/gkngkc/UnityStandaloneFileBrowser/releases/download/1.2/StandaloneFileBrowser.unitypackage)
-
 Example usage:
 
 ```csharp
 // Open file
-var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false);
+var paths = StandaloneFileBrowserHelper.GetFileBrowser().OpenFilePanel("Open File", "", "", false);
 
 // Open file async
-StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", "", false, (string[] paths) => {  });
+StandaloneFileBrowserHelper.GetFileBrowser().OpenFilePanelAsync("Open File", "", "", false, (string[] paths) => {  });
 
 // Open file with filter
 var extensions = new [] {
@@ -27,22 +25,28 @@ var extensions = new [] {
     new ExtensionFilter("Sound Files", "mp3", "wav" ),
     new ExtensionFilter("All Files", "*" ),
 };
-var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", extensions, true);
+var paths = StandaloneFileBrowserHelper.GetFileBrowser().OpenFilePanel("Open File", "", extensions, true);
 
 // Save file
-var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "", "");
+var path = StandaloneFileBrowserHelper.GetFileBrowser().SaveFilePanel("Save File", "", "", "");
 
 // Save file async
-StandaloneFileBrowser.SaveFilePanelAsync("Save File", "", "", "", (string path) => {  });
+StandaloneFileBrowserHelper.GetFileBrowser().SaveFilePanelAsync("Save File", "", "", "", (string path) => {  });
 
 // Save file with filter
 var extensionList = new [] {
     new ExtensionFilter("Binary", "bin"),
     new ExtensionFilter("Text", "txt"),
 };
-var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "MySaveFile", extensionList);
+var path = StandaloneFileBrowserHelper.GetFileBrowser().SaveFilePanel("Save File", "", "MySaveFile", extensionList);
+
+// Open file directly
+StandaloneFileBrowserHelper.GetFileIO.OpenFileAsync(contents => { });
+
+// Save file directly
+string contents = "{}";
+StandaloneFileBrowserHelper.GetFileIO.SaveFileAsync("path/to/file.json", contents);
 ```
-See Sample/BasicSampleScene.unity for more detailed examples.
 
 Mac Screenshot
 ![Alt text](/Documentation/sfb_mac.jpg?raw=true "Mac")
@@ -67,7 +71,3 @@ Notes:
 WebGL:
  - Basic upload/download file support.
  - File filter support.
- - Not well tested, probably not much reliable.
- - Since browsers require more work to do file operations, webgl isn't directly implemented to Open/Save calls. You can check CanvasSampleScene.unity and canvas sample scripts for example usages.
- 
- Live Demo: https://gkngkc.github.io/
