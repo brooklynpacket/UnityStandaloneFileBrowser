@@ -6,6 +6,18 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). ​ ​
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+- Sample code
+
+## [1.0.0]
+
 - Initial import from base repository
 
 ### Added
