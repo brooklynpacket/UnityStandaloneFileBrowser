@@ -1,3 +1,5 @@
+#if UNITY_WEBGL
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +12,6 @@ namespace JamCity.SF.FileBrowser
 {
     internal class StandaloneFileBrowserWebGLHandler : MonoBehaviour
     {
-#if UNITY_WEBGL
         [DllImport(("__Internal"))]
         private static extern void UploadFile(string gameObjectNamePtr, string methodNamePtr, string filterPtr,
                                               bool multiselect);

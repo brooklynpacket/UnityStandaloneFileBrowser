@@ -12,9 +12,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). ​ ​
 
 ### Fixed
 
-### Removed
+- Moved positioning of preprocessor in WebGL file so it compiles when not using the WebGL platform
 
-- Sample code
+### Removed
 
 ## [1.0.0]
 
