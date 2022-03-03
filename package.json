@@ -1,6 +1,6 @@
 {
   "name": "com.jamcity.sf.unity.filebrowser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "SF File Browser",
   "description": "A native file browser for Unity standalone platforms.",
   "unity": "2021.2",
